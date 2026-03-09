@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id "net.serenity-bdd.serenity-gradle-plugin" version "4.0.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    serenityVersion = '4.1.10'
+    serenityCucumberVersion = '4.1.10'
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
+
+    testImplementation 'org.hamcrest:hamcrest:3.0'
+    testImplementation 'org.hamcrest:hamcrest-library:3.0'
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
+    testImplementation "net.serenity-bdd:serenity-core:$rootProject.ext.serenityVersion"
+    testImplementation "net.serenity-bdd:serenity-junit:$rootProject.ext.serenityVersion"
+    testImplementation "net.serenity-bdd:serenity-ensure:${serenityVersion}"
+
+    implementation "net.serenity-bdd:serenity-screenplay:$rootProject.ext.serenityVersion"
+    implementation "net.serenity-bdd:serenity-cucumber:$rootProject.ext.serenityCucumberVersion"
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:$rootProject.ext.serenityVersion"
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
+}
+
+test {
+    useJUnit()
+    systemProperty "webdriver.driver", System.getProperty("webdriver.driver", "chrome")
+}
+
+gradle.buildFinished {
+    println "\n" + "=" * 80
+    println "Serenity report generated at:"
+    println "file:///${project.projectDir}/target/site/serenity/index.html".replace('\\', '/')
+    println "=" * 80 + "\n"
+}
