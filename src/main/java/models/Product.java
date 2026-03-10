@@ -4,12 +4,14 @@ public class Product {
 
     private String name;
     private String category;
-    private Number value;
+    private Integer value;
+    private Integer quantity;
 
-    public Product(String name, String category, Number value){
+    public Product(String name, String category, Integer value, Integer quantity){
         this.name = name;
         this.category = category;
         this.value = value;
+        this.quantity = quantity;
     }
 
     public String getName(){
@@ -20,7 +22,9 @@ public class Product {
         return category;
     }
 
-    public Number getValue(){
+    public Integer getValue(){
         return value;
     }
+
+    public Integer getQuantity(){ return quantity; }
 }

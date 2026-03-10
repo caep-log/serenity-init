@@ -15,7 +15,7 @@ public class EnterAmazon implements Task {
         this.product = product;
     }
 
-    public static EnterAmazon enterAmazon (Product product) {
+    public static EnterAmazon enterAmazon(Product product) {
         return Tasks.instrumented(EnterAmazon.class, product);
     };
 

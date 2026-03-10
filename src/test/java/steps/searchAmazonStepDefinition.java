@@ -5,63 +5,63 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
-import static org.hamcrest.Matchers.greaterThan;
+import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
+import static org.hamcrest.Matchers.*;
 
 import models.Product;
-import net.serenitybdd.screenplay.ensure.Ensure;
 import quetions.ProductResults;
 import quetions.ValueResult;
 import task.*;
-import userInterface.SearchAmazonUI;
 
 public class searchAmazonStepDefinition {
     @Given("Go to Amazon")
     public void goToAmazon(){
-        boolean exist = !SearchAmazonUI.CLICK_SEARCH.resolveAllFor(theActorInTheSpotlight()).isEmpty();
-
-        if (exist) {
-            theActorInTheSpotlight().attemptsTo(
-
-            );
-        } else {
-            theActorInTheSpotlight().attemptsTo(
-
-
-            );
-        }
+        theActorInTheSpotlight().attemptsTo(
+            HumanVerification.humanVerification()
+        );
     }
 
     @When("Change currency")
     public void changeCurrency(){
         theActorInTheSpotlight().attemptsTo(
-            CurrencySettings.currencySettings(),
-            ChangeCurrency.changeCurrency(),
-            SaveCyrrencySettings.saveCyrrencySettings()
+            ChangeCurrency.changeCurrency()
         );
     }
 
     @Then("Put to search {string}")
     public void enterThePage (String productName){
-        Product product = new Product(productName, "Electronics", 0);
+        Product product = new Product(productName, "Electronics", 0, 0);
 
         theActorInTheSpotlight().attemptsTo(
-                EnterAmazon.enterAmazon(product)
+            EnterAmazon.enterAmazon(product)
         );
     };
 
     @And("Search electronic")
     public void searchOnPage(){
         theActorInTheSpotlight().attemptsTo(
-                FindAmazon.findAmazon()
+            FindAmazon.findAmazon()
         );
     }
 
     @And("Must show me {string} List with {string} with {int}")
     public void showList(String product, String keyword, Integer value){
         theActorInTheSpotlight().attemptsTo(
-                SelectProduct.selectProduct(),
-                Ensure.that(ProductResults.title()).containsIgnoringCase(keyword),
-                Ensure.that(ValueResult.value()).isGreaterThan(value)
+            SelectProduct.selectProduct()
+        );
+
+        theActorInTheSpotlight().should(
+            seeThat(ProductResults.displayed(), containsStringIgnoringCase(keyword)),
+            seeThat(ValueResult.value(), greaterThan(value))
+        );
+    }
+
+    @And("Select Quantity {int} about this {string}")
+    public void selectQuantity(Integer quantity, String productName){
+        Product product = new Product(productName, "Electronics", 0, quantity);
+
+        theActorInTheSpotlight().attemptsTo(
+            SelectQuantity.selectQuantity(product)
         );
     }
 
